@@ -8,10 +8,13 @@ project(
 
 add_executable(cesources)
 
-target_compile_features(
+# NOTE: for some reason, using target_compile_features to set the C standard to c99 had no effect, but the below works fine.
+set_target_properties(
     cesources
-    PRIVATE
-    c_std_99
+    PROPERTIES
+    C_STANDARD 99
+    C_STANDARD_REQUIRED ON
+    C_EXTENSIONS OFF
 )
 
 target_compile_options(
