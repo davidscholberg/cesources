@@ -1,0 +1,11 @@
+# Creates a development image meant to be used with podman/toolbox on Fedora. This image will have
+# all build and runtime deps for this project.
+
+# Base image off of Fedora's toolbox image.
+FROM registry.fedoraproject.org/fedora-toolbox
+
+# Install general utilities
+RUN sudo dnf install -y ripgrep vim
+
+# Install project-specific build tools
+RUN sudo dnf install -y cmake gcc gdb
