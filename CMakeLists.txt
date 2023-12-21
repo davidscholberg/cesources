@@ -11,7 +11,7 @@ add_executable(cesources)
 target_compile_features(
     cesources
     PRIVATE
-    c_std_17
+    c_std_99
 )
 
 target_compile_options(
