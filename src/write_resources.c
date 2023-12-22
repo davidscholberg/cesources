@@ -5,11 +5,13 @@
 #include "file_io.h"
 #include "write_resources.h"
 
-#define octal_escape_size 4
+// This is the size that a single byte takes up in the braced initializer list of an embedded
+// resource file. An example of one of these byte elements is the following: "'\012',".
+#define octal_escape_element_size 7
 #define path_max_length 4096
 
 static const char* const resource_var_definition_fmt =
-    "const unsigned char %s[] = \"%s\";\n"
+    "const unsigned char %s[] = {%s};\n"
     "const int %s_size = %ld;\n\n";
 
 bool write_resources(
@@ -99,10 +101,10 @@ bool write_resources(
             return false;
         }
 
-        // Convert file buffer into octal escape string
-        const int file_octal_str_size = (file_buffer_size * 4) + 1;
-        char* file_octal_str = malloc(file_octal_str_size);
-        if (!file_octal_str) {
+        // Convert file buffer into initializer list of octal escape characters.
+        const int file_octal_array_str_size = (file_buffer_size * octal_escape_element_size) + 1;
+        char* file_octal_array_str = malloc(file_octal_array_str_size);
+        if (!file_octal_array_str) {
             fprintf(
                 stderr,
                 "error: couldn't allocate space for octal string of file \"%s\"\n",
@@ -112,23 +114,27 @@ bool write_resources(
             fclose(resources_file);
             return false;
         }
-        char* file_octal_ptr = file_octal_str;
+        char* file_octal_ptr = file_octal_array_str;
         for (int j = 0; j < file_buffer_size; j++) {
-            const int bytes_written =
-                snprintf(file_octal_ptr, octal_escape_size + 1, "\\%.3o", file_buffer[j]);
-            if (bytes_written != octal_escape_size) {
+            const int bytes_written = snprintf(
+                file_octal_ptr,
+                octal_escape_element_size + 1,
+                "'\\%.3o',",
+                file_buffer[j]
+            );
+            if (bytes_written != octal_escape_element_size) {
                 fprintf(
                     stderr,
                     "error: conversion to octal failed for file \"%s\"\n",
                     resource_file_path
                 );
-                free(file_octal_str);
+                free(file_octal_array_str);
                 free(file_buffer);
                 fclose(resources_file);
                 return false;
             }
 
-            file_octal_ptr += octal_escape_size;
+            file_octal_ptr += octal_escape_element_size;
         }
         free(file_buffer);
 
@@ -146,7 +152,7 @@ bool write_resources(
             resources_file,
             resource_var_definition_fmt,
             resource_var_name,
-            file_octal_str,
+            file_octal_array_str,
             resource_var_name,
             file_buffer_size
         );
@@ -157,13 +163,13 @@ bool write_resources(
                 resource_file_path,
                 resources_file_path
             );
-            free(file_octal_str);
+            free(file_octal_array_str);
             fclose(resources_file);
             return false;
         }
 
         // Clean up this iteration
-        free(file_octal_str);
+        free(file_octal_array_str);
     }
 
     // Close resources file and return
