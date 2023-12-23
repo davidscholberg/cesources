@@ -3,7 +3,7 @@ target_include_directories(
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 target_sources(
