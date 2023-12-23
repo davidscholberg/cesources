@@ -34,7 +34,7 @@ toolbox enter cesources
 
 ### Building Cesources
 
-Once you have installed the build dependencies from the [Development Setup][#development-setup] section, you can either build the project via CMake or build it manually.
+Once you have installed the build dependencies from the [Development Setup](#development-setup) section, you can either build the project via CMake or build it manually.
 
 #### Build Via CMake
 
