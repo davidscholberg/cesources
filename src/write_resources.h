@@ -1,4 +1,5 @@
-#pragma once
+#ifndef write_resources_h_
+#define write_resources_h_
 
 #include <stdbool.h>
 
@@ -18,3 +19,5 @@ bool write_resources(
     const char** const resource_filenames,
     const int resource_file_count
 );
+
+#endif  // write_resources_h_

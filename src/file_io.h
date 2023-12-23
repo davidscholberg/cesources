@@ -1,4 +1,5 @@
-#pragma once
+#ifndef file_io_h_
+#define file_io_h_
 
 /// @brief Read the file at the given file path into a buffer. The returned pointer must be freed by
 /// the caller.
@@ -6,3 +7,5 @@
 /// @param file_buffer_size_ptr
 /// @return
 unsigned char* file_to_buffer(const char* const file_path, long* const file_buffer_size_ptr);
+
+#endif  // file_io_h_
