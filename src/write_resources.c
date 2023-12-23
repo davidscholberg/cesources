@@ -10,8 +10,11 @@
 #define octal_escape_element_size 7
 #define path_max_length 4096
 
+/// @brief Format string for defining the unsigned char array and size variables for a given
+/// resource file. A null byte is placed at the end of the array so that the array can be used as a
+/// C string by just casting it to char*.
 static const char* const resource_var_definition_fmt =
-    "const unsigned char %s[] = {%s};\n"
+    "const unsigned char %s[] = {%s0};\n"
     "const int %s_size = %ld;\n\n";
 
 bool write_resources(
